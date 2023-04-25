@@ -26,7 +26,6 @@ class Cell
     }
 };
 
-
 function update_board() {
     //Loop through the board and determine the fate of each cell and assign it to .alive_next_turn
     //Then loop through the board again and set .alive to .alive_next_turn
@@ -36,7 +35,7 @@ function update_board() {
         col = cell.col;
         row = cell.row;
             
-        cell_status = get_cell_status(row, col); // returns 1 if alive
+        cell_status = get_cell_status(row, col); // returns 1 if valid and alive and otherwise 0
 
         num_neighbors = 0;
         num_neighbors += get_cell_status(row-1, col-1);
@@ -48,47 +47,31 @@ function update_board() {
         num_neighbors += get_cell_status(row+1, col);
         num_neighbors += get_cell_status(row+1, col+1);
 
-        // console.log(num_neighbors)
-
         if (cell_status == 0) {
             cell.alive_next_turn = (num_neighbors == 3) // dead cells only come alive with exactly 3 neighbors
         } else {
             cell.alive_next_turn = (num_neighbors == 2 || num_neighbors == 3) // living cells thrive with between 2-3 neighbors
         }
-    // console.log(cell.col);
-    //console.log(element);
-    });
-    // for(let r = 0; r < num_rows; r++) {
-    //     for(let c = 0; c < num_rows; c++) {
-    //         num_neighbors = cells[i]]get_neighbor_ct
-    //     }
-    // }
-    
-    cells.forEach(cell => {
-        cell.alive = cell.alive_next_turn
     });
 
+    cells.forEach(cell => {
+        cell.alive = cell.alive_next_turn // we don't need to reset alive_next, as every value will be overwritten next time this function is called
+    });
 }
-function get_cell_status(row, col) {
+
+function get_cell_status(row, col) { // returns 1 if valid and alive and otherwise 0
     let id;
-    
     if (row >= 0 && row < num_rows && col >= 0 && col < num_cols) {
-        id = row * num_cols + col // id 0 is the topleft most cells, and there num_cols cols per row
-        //console.log('valid ' + row + ' ' + col + ' ' + id)
-        
+        id = row * num_cols + col // id 0 is the topleft most cells, and there num_cols cols per row        
         if  (cells[id].alive) { 
             return 1
         } 
     }
-    //console.log('invalid or empty cell ' + row + ' ' + col)
-    
-    return 0
-
+    return 0 // if cell is dead or out of bounds
 }
 
-
-function createGrid() {
-    console.log('creating grid')
+function create_board_cells() {
+    console.log('creating cell grid')
     num_rows = 40 // canvas height must match rows*row_size
     num_cols = 60 // canvas width must match cols*col_size
     
@@ -102,13 +85,9 @@ function createGrid() {
     }
 }
 
-
 function render_board() {    
-    // Clear the screen
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw each cell on the canvas
-    for (let i = 0; i < cells.length; i++) {
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the board
+    for (let i = 0; i < cells.length; i++) {// Draw each cell on the canvas
         cells[i].draw_cell();
     }
 }
@@ -119,11 +98,10 @@ function init(){
     // Get a reference to the canvas
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
-    createGrid();
+    create_board_cells();
     render_board();
 
     window.requestAnimationFrame(() => gameLoop()); // start the game loop
-
 }
 
 function gameLoop() {
