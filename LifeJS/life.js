@@ -4,6 +4,7 @@ let num_rows, num_cols; // the number of rows and columns in the simulation
 const cells = []; // will hold an array Cell objects
 const refresh_time = 500 // ms to wait before rendering each new frame
 let game_on;
+let last_starting_configuration;
 
 class Cell
 {
@@ -49,14 +50,14 @@ function update_board() {
         num_neighbors += get_cell_status(row+1, col+1);
 
         if (cell_status == 0) {
-            cell.alive_next_turn = (num_neighbors == 3) // dead cells only come alive with exactly 3 neighbors
+            cell.alive_next_turn = (num_neighbors == 3); // dead cells only come alive with exactly 3 neighbors
         } else {
-            cell.alive_next_turn = (num_neighbors == 2 || num_neighbors == 3) // living cells thrive with between 2-3 neighbors
+            cell.alive_next_turn = (num_neighbors == 2 || num_neighbors == 3); // living cells thrive with between 2-3 neighbors
         }
     });
 
     cells.forEach(cell => {
-        cell.alive = cell.alive_next_turn // we don't need to reset alive_next, as every value will be overwritten next time this function is called
+        cell.alive = cell.alive_next_turn; // we don't need to reset alive_next, as every value will be overwritten next time this function is called
     });
 }
 
@@ -65,11 +66,12 @@ function get_cell_status(row, col) { // returns 1 if valid and alive and otherwi
     if (row >= 0 && row < num_rows && col >= 0 && col < num_cols) {
         id = row * num_cols + col // id 0 is the topleft most cells, and there num_cols cols per row        
         if  (cells[id].alive) { 
-            return 1
+            return 1;
         } 
     }
     return 0 // if cell is dead or out of bounds
 }
+
 
 function create_board_cells() {
     console.log('creating cell grid')
@@ -93,22 +95,23 @@ function render_board() {
     }
 }
 
-function populate_board_randomly(fill_rate) {
-    for (let i = 0; i < cells.length; i++) {
-        cells[i].alive = Math.random() >= fill_rate;
-    }
-}
-
 function init(){
     console.log('Initializing a Game of Life instance')
     
     // Get a reference to the canvas
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
-    create_board_cells();
-    populate_board_randomly(.75);
+
+    // Add a click listener to allow the user to modify the simulation manually
+    canvas.addEventListener("click", function (event) {
+        var mousePos = getMousePos(canvas, event);
+        toggle_cell_at(mousePos.x, mousePos.y);
+    }, false);
+
+    create_board_cells(); // Create an array of Cells objects, each representing one cel in the simulation
+    populate_board_randomly(.5); // Apply an initial random starting configuration
     render_board(); // display the starting conditions for the sim
-    game_on = true;
+    game_on = true; // start with the simulation running instead of paused
     window.requestAnimationFrame(() => gameLoop()); // start the game loop
 }
 
@@ -121,11 +124,23 @@ function gameLoop() {
 }
 
 function reset_game() {
-    console.log('Restarting simulation')
+    console.log(`Restarting simulation with starting config ${last_starting_configuration}`)
+    
+    if(isNaN(last_starting_configuration)) {
+        populate_board_randomly(.49)
+    }
+    else {
+        populate_board_randomly(last_starting_configuration)
+    }
+
+    render_board();
+}
+
+function populate_board_randomly(fill_rate) {
     cells.forEach(cell => {
-        cell.alive = Math.random() >= 0.66;
+        cell.alive = Math.random() >= fill_rate;
     });
-    render_board()
+    last_starting_configuration = fill_rate;
 }
 
 function toggle_pause() {
@@ -133,6 +148,27 @@ function toggle_pause() {
     game_on = !game_on //game_loop will keep running when game_on is false but will not update the board or render it
     
     // Update the button text to indicate the action it would perform
-    document.getElementById('pause_resume_button').innerText = game_on ? 'Pause' : 'Play'
+    document.getElementById('pause_resume_button').innerText = game_on ? 'Pause' : 'Play';
+}
+
+//Get Mouse Position
+function getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
+}
+
+function toggle_cell_at(x, y){
+    let row, col, id;
+    row = Math.floor(y/Cell.height)
+    col = Math.floor(x/Cell.width)
+    
+    if (row >= 0 && row < num_rows && col >= 0 && col < num_cols) {
+        id = row * num_cols + col // id 0 is the topleft most cells, and there num_cols cols per row        
+        cells[id].alive = !cells[id].alive
+    }   
+    render_board()
 }
 

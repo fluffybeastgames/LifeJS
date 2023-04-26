@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- <link rel="stylesheet" href="w3.css"> -->
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-green.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">        
@@ -22,20 +21,18 @@
             <div class="w3-dropdown-hover">
               <button class="w3-button w3-theme">Starting Configuration <i class="fa fa-caret-down"></i></button>
               <div class="w3-dropdown-content w3-bar-block w3-border">
-                <a href="#" class="w3-bar-item w3-button">Random (Sparse)</a>
-                <a href="#" class="w3-bar-item w3-button">Random (Intermediate)</a>
-                <a href="#" class="w3-bar-item w3-button">Random (Crowded)</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="populate_board_randomly(.33)">Random (Sparse)</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="populate_board_randomly(.5)">Random (Intermediate)</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="populate_board_randomly(.66)">Random (Crowded)</a>
               </div>
             </div>
             <a class="w3-button w3-theme", id="pause_resume_button", onclick="toggle_pause()">Pause</a>
             <a class="w3-button w3-theme", id="reset_button", onclick="reset_game()">Reset Simulation</a>
-            
-            <!-- <button id="pause_resume_button", onclick="toggle_pause()">Pause</button>
-            <button id="reset_button", onclick="reset_game()">Reset Simulation</button> -->
             <!-- <input type="range" min="1" max="10" value="5" class="slider" id="speed_range"> -->
         </div>
 
         <div class="w3-padding w3-green w3-display-container">
+            
             <div class="w3-card-4">
                 <canvas id="canvas" width="600" height="400" style="border:1px solid lightgrey">
                     This feature requires HTML5 to view
@@ -47,14 +44,10 @@
         <script>
             window.onload = init;
         </script>
-        
-    <!-- <footer class="w3-container w3-theme-dark w3-padding-16">
-        ©2023 Fluffy Beast Games <a href="mailto:contact@fluffybeast.io">contact@fluffybeast.io</a>  - <a href="https://github.com/fluffybeastgames/LifeJS">Life.js</a> v0.0.2 </p>
-    </footer>     -->
 
     <footer class="w3-container w3-theme-dark w3-padding-8" style="position:fixed;bottom:0;width:100%">
         <h4>Fluffy Beast Games</h4>
-        <p>©2023 <a href="mailto:contact@fluffybeast.io">contact@fluffybeast.io</a>  - <a href="https://github.com/fluffybeastgames/LifeJS">Life.js</a> v0.0.3</p>
+        <p>©2023 <a href="mailto:contact@fluffybeast.io">contact@fluffybeast.io</a>  - <a href="https://github.com/fluffybeastgames/LifeJS">Source Code</a> v0.0.3</p>
       </footer>    
 </body>
 </html>
