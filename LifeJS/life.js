@@ -3,6 +3,7 @@ let canvas, context; // the canvas and context we will draw the game cells on
 let num_rows, num_cols; // the number of rows and columns in the simulation
 const cells = []; // will hold an array Cell objects
 const refresh_time = 500 // ms to wait before rendering each new frame
+let game_on;
 
 class Cell
 {
@@ -99,14 +100,32 @@ function init(){
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
     create_board_cells();
-    render_board();
-
+    render_board(); // display the starting conditions for the sim
+    game_on = true;
     window.requestAnimationFrame(() => gameLoop()); // start the game loop
 }
 
 function gameLoop() {
-    update_board(); // check each cell to see if it should be alive next turn and update the .alive tag
-    render_board(); // Redraw the game canvas  
+    if (game_on) {
+        update_board(); // check each cell to see if it should be alive next turn and update the .alive tag
+        render_board(); // Redraw the game canvas  
+    }
     setTimeout( () => { window.requestAnimationFrame(() => gameLoop()); }, refresh_time) // therefore each game loop will last at least refresh_time ms
+}
+
+function reset_game() {
+    console.log('Restarting simulation')
+    cells.forEach(cell => {
+        cell.alive = Math.random() >= 0.66;
+    });
+    render_board()
+}
+
+function toggle_pause() {
+    console.log('Toggling pause')
+    game_on = !game_on //game_loop will keep running when game_on is false but will not update the board or render it
+    
+    // Update the button text to indicate the action it would perform
+    document.getElementById('pause_resume_button').innerText = game_on ? 'Pause' : 'Play'
 }
 

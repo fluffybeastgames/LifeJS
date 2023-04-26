@@ -7,16 +7,23 @@
         <meta name="author" content="fluffybeast.io">
     </head>
     <body>
-        <h1>Conway's game of Life</h1>
-        <h2>by Fluffy Beast</h2>
+        <h1>Conway's Game of Life</h1>      
+        <div id="board_div">
+            <canvas id="canvas" width="600" height="400" style="border:1px solid lightgrey;">
+                This feature requires HTML5 to view
+            </canvas>
+        </div>
+        <div id="controls_div">
+            <button id="pause_resume_button", onclick="toggle_pause()">Pause</button>
+            <button id="reset_button", onclick="reset_game()">Reset Simulation</button>
+            <!-- <input type="range" min="1" max="10" value="5" class="slider" id="speed_range"> -->
+        </div>
         
-        <canvas id="canvas" width="600" height="400" style="border:1px solid lightgrey;">
-            This feature requires HTML5 to view
-        </canvas>
         <script src="life.js"></script>
         <script>
             window.onload = init;
         </script>
+        
     <footer>
         ©2023 Fluffy Beast Games <a href="mailto:contact@fluffybeast.io">contact@fluffybeast.io</a>  - <a href="https://github.com/fluffybeastgames/LifeJS">Life.js</a> v0.0.2 </p>
     </footer>    
