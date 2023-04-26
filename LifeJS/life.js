@@ -17,7 +17,7 @@ class Cell
         this.id = id //position w/in the 1d array of cells
         this.row = row;
         this.col = col;
-        this.alive = Math.random() >= 0.66; // start with a random field and let it sort itself out (TODO - add interesting start states)
+        this.alive = false //start with none alive and add starting config downstream
         this.alive_next_turn = false
     }   
 
@@ -93,6 +93,12 @@ function render_board() {
     }
 }
 
+function populate_board_randomly(fill_rate) {
+    for (let i = 0; i < cells.length; i++) {
+        cells[i].alive = Math.random() >= fill_rate;
+    }
+}
+
 function init(){
     console.log('Initializing a Game of Life instance')
     
@@ -100,6 +106,7 @@ function init(){
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
     create_board_cells();
+    populate_board_randomly(.75);
     render_board(); // display the starting conditions for the sim
     game_on = true;
     window.requestAnimationFrame(() => gameLoop()); // start the game loop
